@@ -1,95 +1,51 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect } from "react";
 import styles from "./page.module.css";
+import { parseString, parseStringPromise } from "xml2js";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const fetchMountains = async () => {
+    try {
+      // const response = await fetch(
+      //   "https://apis.data.go.kr/1400000/service/cultureInfoService2/mntInfoOpenAPI2?searchWrd=%EB%AF%BC%EB%91%A5%EC%82%B0&ServiceKey=B6wtfFMtSrBtgvqbOBe8WnfxwiAK9rFGXbbR5HFP2t8nlu5PvY795CYo45vBS%2BEpN1y5ec4P%2B%2B2EhbhgoM5l0A%3D%3D"
+      // );
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      const randomNumber = Math.floor(Math.random() * 160) + 1;
+      const response = await fetch(
+        `https://apis.data.go.kr/1400000/service/cultureInfoService2/mntInfoOpenAPI2?ServiceKey=B6wtfFMtSrBtgvqbOBe8WnfxwiAK9rFGXbbR5HFP2t8nlu5PvY795CYo45vBS%2BEpN1y5ec4P%2B%2B2EhbhgoM5l0A%3D%3D&pageNo=${randomNumber}&numOfRows=20`
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await parseString(response);
+      console.log("Mountains data:", data);
+
+      const xmlText = await response.text();
+      const result = await parseStringPromise(xmlText);
+      console.log(result);
+      const items = result.response.body[0].items[0].item;
+      console.log("Parsed items:", items);
+      const hg = items.filter((item: any) => item.mntihigh[0] !== "0");
+      console.log("Filtered mountains with height:", hg);
+    } catch (error) {
+      console.error("Error fetching mountains:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMountains();
+  }, []);
+
+  return (
+    <div className={styles.container}>
+      <section>
+        <h3>History</h3>
+      </section>
+      <section>
+        <h3>Recommendation</h3>
+      </section>
     </div>
   );
 }

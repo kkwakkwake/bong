@@ -1,0 +1,134 @@
+.container {
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.header > input {
+  flex: 1;
+  height: 36px;
+  border: none;
+
+  font-size: 16px;
+  padding: 0 12px;
+}
+
+.header > input:focus {
+  outline: none;
+}
+
+.header > button {
+  height: 36px;
+  border-left: 1px solid #eee;
+  background-color: #eee;
+  padding: 0 12px;
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.header > button > img {
+  vertical-align: middle;
+}
+
+.categoryList {
+  padding: 12px 0;
+  display: flex;
+  gap: 8px;
+}
+
+.categoryList li {
+  color: #808080;
+  padding: 8px 16px;
+  border: 1px solid #eeeeee;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* .categoryList li::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 16px;
+  background-image: url("/icons/icons-mountain-green.png");
+  background-size: 16px;
+  background-repeat: no-repeat;
+} */
+
+.categoryList .categorySelected {
+  color: black;
+  background-color: #94d82d;
+  border: 1px solid #94d82d;
+}
+
+.mapResultList {
+  /* background-color: rgb(250, 250, 250); */
+  box-shadow: rgba(100, 100, 111, 0.2) 0px -7px 29px 0px;
+  margin: 0 -20px;
+  padding: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  /* background: red; */
+  position: relative;
+}
+
+.mapResultList::before {
+  content: "";
+  width: 60px;
+  height: 4px;
+  background: #ddd;
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* slide-up-container 초기 상태 */
+.slide-up-container {
+  /* position: fixed; */
+  /* bottom: 0; */
+  /* left: 0; */
+  /* right: 0; */
+  background: white;
+  /* transform: translateY(100%); */
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 32px 32px 0 0;
+  z-index: 999;
+}
+
+/* 활성화 시 올라옴 */
+.slide-up-container.active {
+  transform: translateY(-300px);
+}
+
+/* .mapResultList .mountainList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+} */
+
+.moutainList {
+  overflow: scroll;
+  background: aliceblue;
+  height: 400px;
+}
+.mountainItem {
+  border: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
