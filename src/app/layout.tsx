@@ -6,6 +6,7 @@ import style from "./layout.module.css";
 import Image from "next/image";
 // import IconSearchBar from "/public/icons/search-bar.png";
 import IconSearchBar2 from "/public/icons/icons8-search.svg";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -16,6 +17,11 @@ import IconSearchBar2 from "/public/icons/icons8-search.svg";
 //   variable: "--font-geist-mono",
 //   subsets: ["latin"],
 // });
+
+const notosansMono = IBM_Plex_Sans_KR({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -47,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${notosansMono.className}`}>
         <div className={style.container}>
           <div className={style.innerContainer}>
             <header>

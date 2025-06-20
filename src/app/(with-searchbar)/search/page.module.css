@@ -6,6 +6,7 @@
   align-items: center;
   border: 1px solid #eee;
   border-radius: 8px;
+  margin-bottom: 20px;
 }
 
 .header > input {
@@ -34,40 +35,6 @@
   vertical-align: middle;
 }
 
-.categoryList {
-  padding: 12px 0;
-  display: flex;
-  gap: 8px;
-}
-
-.categoryList li {
-  color: #808080;
-  padding: 8px 16px;
-  border: 1px solid #eeeeee;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-/* .categoryList li::before {
-  content: "";
-  display: block;
-  width: 24px;
-  height: 16px;
-  background-image: url("/icons/icons-mountain-green.png");
-  background-size: 16px;
-  background-repeat: no-repeat;
-} */
-
-.categoryList .categorySelected {
-  color: black;
-  background-color: #94d82d;
-  border: 1px solid #94d82d;
-}
-
 .mapResultList {
   /* background-color: rgb(250, 250, 250); */
   box-shadow: rgba(100, 100, 111, 0.2) 0px -7px 29px 0px;
@@ -92,43 +59,60 @@
   cursor: pointer;
 }
 
-/* slide-up-container 초기 상태 */
-.slide-up-container {
-  /* position: fixed; */
-  /* bottom: 0; */
-  /* left: 0; */
-  /* right: 0; */
-  background: white;
-  /* transform: translateY(100%); */
-  transition: transform 0.3s ease-in-out;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 32px 32px 0 0;
-  z-index: 999;
-}
-
-/* 활성화 시 올라옴 */
-.slide-up-container.active {
-  transform: translateY(-300px);
-}
-
-/* .mapResultList .mountainList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-} */
-
 .moutainList {
   overflow: scroll;
   background: aliceblue;
   height: 400px;
 }
 .mountainItem {
-  border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 20px;
+  padding: 20px 0px;
   border-radius: 12px;
-  margin-bottom: 12px;
   cursor: pointer;
+  gap: 12px;
+  /* height: 200px; */
+  overflow: hidden;
+}
+
+.mountainIcon > img {
+  border-radius: 12px;
+}
+
+.mountainDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  /* overflow-wrap: break-word; */
+  /* white-space: nowrap; */
+  height: 120px;
+  text-overflow: ellipsis;
+}
+
+.mountainName {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.mountainInfo {
+  font-size: 14px;
+  color: #808080;
+}
+
+.mountainDetails > p {
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: keep-all;
+}
+
+.tab {
+  font-size: 18px;
+  font-weight: bold;
 }

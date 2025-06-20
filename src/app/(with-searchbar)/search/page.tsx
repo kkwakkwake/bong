@@ -22,7 +22,9 @@ import IconMountainGray from "../../../../public/icons/icons-mountain-gray.png";
 import IconPathGray from "../../../../public/icons/icons-path-gray.png";
 import IconMountainBlack from "../../../../public/icons/icons-mountain-black.png";
 import IconPathBlack from "../../../../public/icons/icons-path-black.png";
-import { useSearchParams } from "next/navigation";
+
+import MountainThumb from "../../../../public/images/mountain-thumb.jpg";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface TNearMountainItem {
   // address_name: "서울 강남구 일원동";
@@ -64,6 +66,7 @@ export default function Page() {
   const [searchInput, setSearchInput] = useState<string>(query);
 
   const [searchResult, setSearchResult] = useState<any[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     console.log("query", query);
@@ -130,7 +133,9 @@ export default function Page() {
       const response = await fetch(
         `https://apis.data.go.kr/1400000/service/cultureInfoService2/mntInfoOpenAPI2?searchWrd=${
           searchInput || query
-        }&ServiceKey=B6wtfFMtSrBtgvqbOBe8WnfxwiAK9rFGXbbR5HFP2t8nlu5PvY795CYo45vBS%2BEpN1y5ec4P%2B%2B2EhbhgoM5l0A%3D%3D&pageNo=1&numOfRows=20`
+        }&ServiceKey=${
+          process.env.NEXT_PUBLIC_MOUNTAIN_API_KEY
+        }&pageNo=1&numOfRows=20`
       );
 
       console.log("Fetching mountains with name:", response);
@@ -149,12 +154,47 @@ export default function Page() {
           Object.entries(item).map(([key, value]) => [key, value?.[0] ?? ""])
         )
       );
-      setSearchResult(cleanItems);
+      const exactItems = cleanItems.filter(
+        (item: any) => item.mntidetails !== "( - )"
+      );
+      setSearchResult(exactItems);
       console.log("Parsed items:", items, cleanItems);
     } catch (error) {
       console.error("Error fetching mountains:", error);
     }
   };
+
+  const handleSearchInput = () => {
+    if (!searchInput.trim()) {
+      return;
+    }
+    router.push(`/search?query=${searchInput}`);
+  };
+
+  const fetchTrails = async () => {
+    const domain = "http://localhost:3000";
+    const attrFilter = "emdCd:=:11680103";
+    const crs = "EPSG:4326";
+
+    try {
+      const response = await fetch(
+        `https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_L_FRSTCLIMB&key=${process.env.NEXT_PUBLIC_TRAIL_API_KEY}&attrFilter=${attrFilter}&domain=${domain}&crs=${crs}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await parseString(response);
+      console.log("Trails data:", data);
+    } catch (error) {
+      console.error("Error fetching trails:", error);
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      fetchTrails();
+    }, 2000);
+  }, []);
 
   return (
     <div className={style.container}>
@@ -164,53 +204,40 @@ export default function Page() {
           placeholder="어디로 갈까요?"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearchInput();
+            }
+          }}
         />
-        <button>
+        <button onClick={() => handleSearchInput()}>
           <Image src={IconSearch} alt="search-bar" width={28} height={28} />
         </button>
       </header>
       <div>
-        <ul className={style.categoryList}>
-          <li
-            onClick={() => clickCategoryMethod("mountain")}
-            className={
-              category.includes("mountain") ? style.categorySelected : ""
-            }
-          >
-            <Image
-              src={
-                category.includes("mountain")
-                  ? IconMountainBlack
-                  : IconMountainGreen
-              }
-              alt="mountain-icon"
-              width={16}
-              height={16}
-            />
-            <span>산</span>
-          </li>
-          <li
-            onClick={() => clickCategoryMethod("path")}
-            className={category.includes("path") ? style.categorySelected : ""}
-          >
-            <Image
-              src={category.includes("path") ? IconPathBlack : IconPathGreen}
-              alt="path-icon"
-              width={16}
-              height={16}
-            />
-            <span>등산 추천 코스</span>
-          </li>
-        </ul>
-      </div>
-      <div>
         <div className={style.mountainList}>
+          {searchResult && searchResult.length > 0 && (
+            <div className={style.tab}>산 {searchResult.length}</div>
+          )}
           {searchResult && searchResult.length > 0 ? (
             searchResult.map((result) => (
               <div key={result.mntilistno} className={style.mountainItem}>
-                <span>{result.mntiname}</span>
-                <p>{result.mntiadd}</p>
-                <p>{result.mntidetails}</p>
+                <div className={style.mountainIcon}>
+                  <Image
+                    src={MountainThumb}
+                    alt="산 아이콘"
+                    width={120}
+                    height={120}
+                  />
+                </div>
+                <div className={style.mountainDetails}>
+                  <p className={style.mountainName}>{result.mntiname}</p>
+                  <div className={style.mountainInfo}>
+                    <span>{result.mntiadd}</span>
+                    {result.mnthigh && <span>{result.mntihigh}</span>}
+                  </div>
+                  <p className={style.mountainInfo}>{result.mntidetails}</p>
+                </div>
               </div>
             ))
           ) : (
@@ -218,8 +245,8 @@ export default function Page() {
           )}
         </div>
       </div>
-      <NaverMap onUpdatePosition={handleUpdatePosition} />
-      <div
+      {/* <NaverMap onUpdatePosition={handleUpdatePosition} /> */}
+      {/* <div
         className={`${style.mapResultList} ${style["slide-up-container"]} ${
           resultOpen ? style["active"] : ""
         }`}
@@ -244,7 +271,7 @@ export default function Page() {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

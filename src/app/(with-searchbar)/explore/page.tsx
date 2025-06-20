@@ -118,10 +118,6 @@ export default function Page() {
     console.log("Mountains fetched:", nearMountains);
   }, [nearMountains]);
 
-  useEffect(() => {
-    console.log("searchInput", searchInput);
-  }, [searchInput]);
-
   const handleSearchInput = () => {
     if (!searchInput.trim()) {
       return;
